@@ -12,19 +12,19 @@ export class FeedService {
         private readonly feedPostRepository: Repository<FeedPostEntity>
     ) {}
 
-    createPost(feedPost: FeedPost): Observable<FeedPost> {
-        return from(this.feedPostRepository.save(feedPost));
+    createPost(feedPost: FeedPost): Promise<FeedPost> {
+        return this.feedPostRepository.save(feedPost);
     }
 
-    findAllPosts(): Observable<FeedPost[]> {
-        return from(this.feedPostRepository.find());
+    findAllPosts(): Promise<FeedPost[]> {
+        return this.feedPostRepository.find();
     }
-    findPostById(ids: number[]): Observable<FeedPost[]> {
-        return from(this.feedPostRepository.findByIds(ids))
+    findPostById(id: number): Promise<FeedPost> {
+        return this.feedPostRepository.findOne(id)
     }
-    updatePost(id: number, feedPost: FeedPost): Observable<UpdateResult> {
-        return from(this.feedPostRepository.update(id, feedPost))
+    updatePost(id: number, feedPost: FeedPost): Promise<UpdateResult> {
+        return this.feedPostRepository.update(id, feedPost)
     }
-    deletePost(id: number): Observable<DeleteResult>{
-        return from(this.feedPostRepository.delete(id))
+    deletePost(id: number): Promise<DeleteResult>{
+        return this.feedPostRepository.delete(id)
     }}

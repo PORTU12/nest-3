@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, Param, Post, Put } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, ParseIntPipe, Post, Put } from '@nestjs/common';
 import { from, Observable } from 'rxjs';
 import { DeleteResult, UpdateResult } from 'typeorm';
 import { FeedPostEntity } from '../models/post.entity';
@@ -10,31 +10,31 @@ export class FeedController {
     feedPostRepository: any;
     constructor(private feedService: FeedService) { }
     @Post()
-    create(@Body() feedPost: FeedPost): Observable<FeedPost> {
+    create(@Body() feedPost: FeedPost): Promise<FeedPost> {
         return this.feedService.createPost(feedPost);
     }
 
     @Get()
-    async findAll(): Promise<Observable<FeedPost[]>>{
+    async findAll(): Promise<FeedPost[]>{
         return this.feedService.findAllPosts();
     }
     @Get(':id')
     async findOne(
-        @Param('id') ids: number[]
-    ): Promise<Observable<FeedPostEntity[]>>{
-        return this.feedService.findPostById(ids)
+        @Param('id', ParseIntPipe) id: number
+    ): Promise<FeedPostEntity>{
+        return this.feedService.findPostById(id)
     }
     @Put(':id')
     update(
         @Param('id') id: number,
         @Body() feedPost: FeedPost
-    ): Observable<UpdateResult> {
+    ): Promise<UpdateResult> {
         return this.feedService.updatePost(id, feedPost)
     }
     @Delete(':id')
     delete(
         @Param('id') id:number,
-    ): Observable<DeleteResult> {
+    ): Promise<DeleteResult> {
         return this.feedService.deletePost(id)
     }
 }
